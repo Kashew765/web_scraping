@@ -1,0 +1,32 @@
+from bs4 import BeautifulSoup
+import requests
+
+website=requests.get('https://pec.edu.in/')
+soup=BeautifulSoup(website,'lxml')
+
+#extracting text
+text = soup.get_text(separator='\n') #,strip=True)
+
+#extracting hyperlinks
+hyperlinks = set()
+for link in soup.find_all('a', href=True):
+  href = urljoin(url, link['href'])
+  hyperlinks.add(href)
+
+#extracting images
+img_tags = soup.find_all('img')
+for img in img_tags:
+    img_url = img.get('src')
+    if not img_url:
+        continue
+    img_url = urljoin(url, img_url)  
+
+#retrieve the text, hyperlinks and images
+print("Text Content:\n", text)
+print("\nHyperlinks:")
+for link in hyperlinks:
+  print(link)
+
+print("\nImages:")
+for img in img_tags:
+        print(img)
